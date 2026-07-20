@@ -63,10 +63,12 @@ az functionapp create \
   --name <app-name> --storage-account <storage> --os-type Linux
 ```
 
-Deploy from the repo root with the binary in place:
+Deploy from the repo root with the binary in place. The `--custom` flag is required: Core Tools
+can't auto-detect the language of a custom-handler project (there's no `local.settings.json`
+marker) and otherwise refuses with "Can't determine project language from files":
 
 ```bash
-func azure functionapp publish <app-name>
+func azure functionapp publish <app-name> --custom
 ```
 
 Then the platform-side steps (shown as `curl`; any HTTP client works):
