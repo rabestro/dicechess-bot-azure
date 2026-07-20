@@ -4,10 +4,14 @@ ThisBuild / scalaVersion := "3.8.4"
 
 ThisBuild / description := "Dice Chess webhook bot in Scala: the engine's aggressive search + opening book, compiled to a GraalVM native image for Azure Functions."
 
-// The engine artifact lives in GitHub Packages, which requires authentication
-// even for public packages (read:packages scope).
+// Both the engine and the webhook runtime live in GitHub Packages, which requires
+// authentication even for public packages (read:packages scope). GitHub Packages'
+// Maven registry is per-repository, so each artifact needs its own resolver entry —
+// but both share the same host, so the one credentials block below covers both.
 ThisBuild / resolvers += "GitHub Packages (dicechess-engine)" at
   "https://maven.pkg.github.com/rabestro/dicechess-engine-scala"
+ThisBuild / resolvers += "GitHub Packages (dicechess-bot-runtime)" at
+  "https://maven.pkg.github.com/rabestro/dicechess-bot-runtime"
 
 // Credentials for that resolver. `credentials` is an sbt *setting*, evaluated on every
 // load — even for offline tasks — so we keep it free of network calls: GitHub Packages
@@ -27,7 +31,8 @@ ThisBuild / credentials ++= (for {
 } yield Credentials("GitHub Package Registry", "maven.pkg.github.com", user, token)).toSeq
 
 val DiceChessEngineVersion = "1.6.1"
-val MunitVersion           = "1.3.4"
+val DiceChessBotRuntimeVersion = "0.1.1"
+val MunitVersion = "1.3.4"
 
 lazy val root = (project in file("."))
   .enablePlugins(NativeImagePlugin)
@@ -37,8 +42,12 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Seq(
       // The whole point of this starter: the real engine as a dependency — AggressiveSearch,
       // OpeningBookBot, FenParser, TurnGenerator. Pulls circe transitively (OpeningBookParser).
-      "lv.id.jc"      %% "dicechess-engine-scala" % DiceChessEngineVersion,
-      "org.scalameta" %% "munit"                  % MunitVersion % Test
+      "lv.id.jc" %% "dicechess-engine-scala" % DiceChessEngineVersion,
+      // Plain `%`, not `%%` — a Java artifact, not cross-built per Scala version. Replaces this
+      // repo's own Webhook.scala/Main.scala HTTP-server plumbing with the shared, independently
+      // tested implementation (HMAC signing, handshake, TurnContext, CustomHandlerServer).
+      "lv.id.jc" % "dicechess-bot-runtime" % DiceChessBotRuntimeVersion,
+      "org.scalameta" %% "munit" % MunitVersion % Test
     ),
     // native-image comes from the environment (CI: graalvm/setup-graalvm; locally: a GraalVM
     // on PATH). The engine is pure bitboard computation and circe derivation is compile-time,

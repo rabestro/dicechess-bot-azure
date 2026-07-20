@@ -25,10 +25,15 @@ already on the wire, so no engine linkage is ever required — see
 | Path | Role |
 | --- | --- |
 | `src/main/scala/dicechess/bot/Strategy.scala` | aggressive + book composition; DFEN in, UCI path out. **Swap the algorithm here.** |
-| `src/main/scala/dicechess/bot/Webhook.scala` | Pure delivery logic: HMAC verification (±5 min replay window), handshake nonce echo. |
-| `src/main/scala/dicechess/bot/Main.scala` | JDK `HttpServer` custom-handler process (`FUNCTIONS_CUSTOMHANDLER_PORT`). |
+| `src/main/scala/dicechess/bot/Main.scala` | Wires `Strategy` into [`dicechess-bot-runtime`](https://github.com/rabestro/dicechess-bot-runtime)'s `WebhookHandler`/`CustomHandlerServer` — a Java dependency, not this repo's own code. |
 | `opening_book.json` | The exported opening book (a file on disk — swap without rebuilding). |
 | `host.json` · `webhook/function.json` | Azure Functions custom-handler wiring (`enableForwardingHttpRequest`). |
+
+HMAC verification, the ownership handshake, and the JDK `HttpServer` itself are no longer this
+repo's code — they're [`dicechess-bot-runtime`](https://github.com/rabestro/dicechess-bot-runtime)
+(`lv.id.jc:dicechess-bot-runtime`), the same dependency a Java or Kotlin bot would use. `Main.scala`
+is the entire integration: adapt `Strategy.chooseMoves` to the library's
+`Function<TurnContext, List<String>>` shape and start the server.
 
 ## Local development
 
@@ -36,7 +41,7 @@ Requires JDK 21+ and sbt; resolving the engine needs a GitHub token with `read:p
 (`gh auth login` is enough — the build reads `gh auth token`).
 
 ```bash
-sbt test        # hermetic: signature vector, handshake, legality via the engine, book-hit
+sbt test        # hermetic: legality via the engine, book-hit, one real-HTTP round trip through the library
 sbt run         # serves on :8080; then e.g.:
 curl -X POST localhost:8080/api/webhook -d '{"type":"verification","nonce":"x"}'
 ```
