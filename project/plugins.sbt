@@ -1,0 +1,3 @@
+// GraalVM native-image packaging: `sbt nativeImage` produces the standalone binary the
+// Azure Functions custom handler runs (see host.json / .github/workflows/ci.yml).
+addSbtPlugin("org.scalameta" % "sbt-native-image" % "0.3.4")
