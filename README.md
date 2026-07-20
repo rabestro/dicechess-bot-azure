@@ -1,24 +1,26 @@
-# Dice Chess bot — Scala starter (engine-powered)
+# Dice Chess bot — aggressive + book (Scala, engine-powered)
 
-A Dice Chess webhook bot in **Scala 3** that links the **real game engine** as a dependency —
+The live `rabestro/aggressive-2` ladder bot: a Dice Chess webhook bot in **Scala 3** that links
+the **real game engine** as a dependency —
 [`dicechess-engine-scala`](https://github.com/rabestro/dicechess-engine-scala) — and plays its
 **aggressive** king-hunt search behind the exported **opening book**
 (`OpeningBookBot.decorate(AggressiveSearch, book)`). Compiled to a **GraalVM native image**, it
 runs as an Azure Functions **custom handler**: cold starts in the same league as Node, none of
 the JVM's 5–20 s serverless startup pain.
 
-Where the [TypeScript](https://github.com/rabestro/dicechess-bot-typescript) and
-[Python](https://github.com/rabestro/dicechess-bot-python) starters are MIT transport shells that
-walk the server-provided move tree, this one is the full-strength path: the engine parses the
-DFEN from the webhook envelope (dice pool included), enumerates legal turns itself, consults the
-book, and evaluates the position. The envelope's position string is all it needs.
+Built from [`dicechess-bot-scala`](https://github.com/rabestro/dicechess-bot-scala) — that
+repo is the minimal, no-engine, MIT starter (swap its `Strategy.scala` for your own algorithm);
+this one exists because linking the real engine needs an actual dependency and a licensing
+choice (see below), which a "maximally simple" template shouldn't carry by default. Start here
+directly if you specifically want the engine already wired in.
 
 ## Licensing
 
-**AGPL-3.0**, because it links the AGPL engine. Forks and experiments are welcome — derived bots
-stay AGPL. If you want a **closed-source** bot, use the MIT starters instead: the legal moves are
-already on the wire, so no engine linkage is ever required — see
-[Licensing for Bots](https://rabestro.github.io/dicechess-play-api/licensing/).
+**AGPL-3.0**, because it links the AGPL engine — this is the trade-off that
+[`dicechess-bot-scala`](https://github.com/rabestro/dicechess-bot-scala) deliberately avoids.
+Forks and experiments are welcome — derived bots stay AGPL. If you want a **closed-source** bot,
+fork the MIT template instead: the legal moves are already on the wire, so no engine linkage is
+ever required — see [Licensing for Bots](https://rabestro.github.io/dicechess-play-api/licensing/).
 
 ## Layout
 
