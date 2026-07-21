@@ -20,7 +20,7 @@ directly if you specifically want the engine already wired in.
 [`dicechess-bot-scala`](https://github.com/rabestro/dicechess-bot-scala) deliberately avoids.
 Forks and experiments are welcome — derived bots stay AGPL. If you want a **closed-source** bot,
 fork the MIT template instead: the legal moves are already on the wire, so no engine linkage is
-ever required — see [Licensing for Bots](https://rabestro.github.io/dicechess-play-api/licensing/).
+ever required — see [Licensing for Bots](https://jc.id.lv/dicechess-play-api/licensing/).
 
 ## Layout
 
@@ -101,7 +101,7 @@ az functionapp config appsettings set --name <app-name> --resource-group <rg> \
 curl -X POST "$BASE/bot/ladder/join" -H "Authorization: Bearer <token>"
 ```
 
-Full platform reference: <https://rabestro.github.io/dicechess-play-api/>.
+Full platform reference: <https://jc.id.lv/dicechess-play-api/>.
 
 ## Why native-image
 
