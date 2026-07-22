@@ -1,6 +1,13 @@
 # Dice Chess bot — aggressive + book (Scala, engine-powered)
 
-The live `rabestro/aggressive-2` ladder bot: a Dice Chess webhook bot in **Scala 3** that links
+[![CI](https://github.com/rabestro/dicechess-bot-aggressive/actions/workflows/ci.yml/badge.svg)](https://github.com/rabestro/dicechess-bot-aggressive/actions/workflows/ci.yml)
+[![Play Live](https://img.shields.io/badge/Play-Live-success)](https://play.jc.id.lv/)
+[![Leaderboard](https://img.shields.io/badge/Ladder-Leaderboard-1E90FF)](https://play.jc.id.lv/leaderboard)
+[![Engine](https://img.shields.io/badge/Engine-dicechess--engine--scala-8A2BE2)](https://github.com/rabestro/dicechess-engine-scala)
+[![Bot API](https://img.shields.io/badge/Docs-Bot%20API-orange)](https://jc.id.lv/dicechess-play-api/)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-lightgrey)](./LICENSE)
+
+The live [`azure/scala-aggressive-book`](https://play.jc.id.lv/leaderboard) ladder bot: a Dice Chess webhook bot in **Scala 3** that links
 the **real game engine** as a dependency —
 [`dicechess-engine-scala`](https://github.com/rabestro/dicechess-engine-scala) — and plays its
 **aggressive** king-hunt search behind the exported **opening book**
