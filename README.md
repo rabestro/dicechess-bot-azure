@@ -1,6 +1,6 @@
 # Dice Chess bot — aggressive + book (Scala, engine-powered)
 
-[![CI](https://github.com/rabestro/dicechess-bot-aggressive/actions/workflows/ci.yml/badge.svg)](https://github.com/rabestro/dicechess-bot-aggressive/actions/workflows/ci.yml)
+[![CI](https://github.com/rabestro/dicechess-bot-azure/actions/workflows/ci.yml/badge.svg)](https://github.com/rabestro/dicechess-bot-azure/actions/workflows/ci.yml)
 [![Play Live](https://img.shields.io/badge/Play-Live-success)](https://play.jc.id.lv/)
 [![Leaderboard](https://img.shields.io/badge/Ladder-Leaderboard-1E90FF)](https://play.jc.id.lv/leaderboard)
 [![Engine](https://img.shields.io/badge/Engine-dicechess--engine--scala-8A2BE2)](https://github.com/rabestro/dicechess-engine-scala)

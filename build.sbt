@@ -37,7 +37,7 @@ val MunitVersion = "1.3.4"
 lazy val root = (project in file("."))
   .enablePlugins(NativeImagePlugin)
   .settings(
-    name                := "dicechess-bot-aggressive",
+    name                := "dicechess-bot-azure",
     Compile / mainClass := Some("dicechess.bot.Main"),
     libraryDependencies ++= Seq(
       // The whole point of this starter: the real engine as a dependency — AggressiveSearch,
