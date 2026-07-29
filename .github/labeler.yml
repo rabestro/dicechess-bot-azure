@@ -1,0 +1,21 @@
+# Type labels from the branch naming convention: (task|feat|bug|refactor)/<id>-<desc>
+enhancement:
+  - head-branch: ['^feat/']
+bug:
+  - head-branch: ['^bug/']
+refactoring:
+  - head-branch: ['^refactor/']
+
+# Path-based labels
+testing:
+  - changed-files:
+      - any-glob-to-any-file: ['**/test/**', '**/*.test.*']
+documentation:
+  - changed-files:
+      - any-glob-to-any-file: ['**/*.md', 'docs/**']
+ci-cd:
+  - changed-files:
+      - any-glob-to-any-file: ['.github/**', 'Dockerfile', 'docker-compose*.yaml']
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file: ['package.json', 'package-lock.json', 'build.sbt', 'project/**']
