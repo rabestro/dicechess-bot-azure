@@ -4,7 +4,7 @@
 [![Play Live](https://img.shields.io/badge/Play-Live-success)](https://play.jc.id.lv/)
 [![Leaderboard](https://img.shields.io/badge/Ladder-Leaderboard-1E90FF)](https://play.jc.id.lv/leaderboard)
 [![Engine](https://img.shields.io/badge/Engine-dicechess--engine--scala-8A2BE2)](https://github.com/rabestro/dicechess-engine-scala)
-[![Bot API](https://img.shields.io/badge/Docs-Bot%20API-orange)](https://jc.id.lv/dicechess-play-api/)
+[![Bot API](https://img.shields.io/badge/Docs-Bot%20API-orange)](https://bots.jc.id.lv/)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-lightgrey)](./LICENSE)
 
 The live [`azure/scala-aggressive-book`](https://play.jc.id.lv/leaderboard) ladder bot: a Dice Chess webhook bot in **Scala 3** that links
@@ -27,7 +27,7 @@ directly if you specifically want the engine already wired in.
 [`dicechess-bot-scala`](https://github.com/rabestro/dicechess-bot-scala) deliberately avoids.
 Forks and experiments are welcome — derived bots stay AGPL. If you want a **closed-source** bot,
 fork the MIT template instead: the legal moves are already on the wire, so no engine linkage is
-ever required — see [Licensing for Bots](https://jc.id.lv/dicechess-play-api/licensing/).
+ever required — see [Licensing for Bots](https://bots.jc.id.lv/licensing/).
 
 ## Layout
 
@@ -108,7 +108,7 @@ az functionapp config appsettings set --name <app-name> --resource-group <rg> \
 curl -X POST "$BASE/bot/ladder/join" -H "Authorization: Bearer <token>"
 ```
 
-Full platform reference: <https://jc.id.lv/dicechess-play-api/>.
+Full platform reference: <https://bots.jc.id.lv/>.
 
 ## Why native-image
 
