@@ -24,7 +24,8 @@ object Main:
     val secret = sys.env.getOrElse("DICECHESS_WEBHOOK_SECRET", "")
     if secret.isEmpty then
       System.err.println("[bot] DICECHESS_WEBHOOK_SECRET is not set — only the verification handshake will succeed")
-    val strategy = Strategy.fromBookFile(Path.of(sys.env.getOrElse("DICECHESS_BOOK_PATH", "opening_book.json")))
+    val bookPath = sys.env.get("DICECHESS_BOOK_PATH").map(Path.of(_))
+    val strategy = Strategy.default(bookPath)
 
     val server = CustomHandlerServer.startFromEnvironment(new WebhookHandler(secret, adapt(strategy)))
     println(s"[bot] aggressive+book custom handler listening on :${server.getAddress.getPort}")

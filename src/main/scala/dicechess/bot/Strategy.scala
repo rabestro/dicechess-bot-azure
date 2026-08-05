@@ -2,16 +2,17 @@ package dicechess.bot
 
 import dicechess.engine.domain.{FenParser, Move}
 import dicechess.engine.search.{AggressiveSearch, OpeningBookBot, OpeningBookParser, SearchAlgorithm}
+import dicechess.openingbook.InstrumentedBook
 
 import java.nio.file.{Files, Path}
 
 /** The move-choosing brain: the engine's `AggressiveSearch` decorated with the opening book
-  * (`OpeningBookBot.decorate`). This is the payoff of linking the engine instead of talking to it over the wire — the
+  * (`InstrumentedBook`). This is the payoff of linking the engine instead of talking to it over the wire — the
   * bot needs nothing but the DFEN from the webhook envelope: the engine parses it (dice pool included, 7th field),
   * enumerates the legal turns itself, consults the book, and evaluates with the aggressive king-hunt heuristics. No
   * `legalMoves` tree from the wire, no fallback fetch of `GET /games/{id}/moves` — the position string is sufficient.
   */
-final class Strategy(bot: SearchAlgorithm):
+final class Strategy(val bot: SearchAlgorithm):
 
   /** DFEN in (the envelope's `state.dfen`), UCI micro-move path out. `Nil` = forced pass (the server auto-passes; the
     * webhook answers `{"moves": []}`, which plays nothing — correct and harmless). `Left` = unusable DFEN.
@@ -30,21 +31,29 @@ object Strategy:
     move.fromSquare.toNotation + move.toSquare.toNotation +
       move.promotionPieceType.map(_.asNotation).getOrElse("")
 
-  /** Build the aggressive+book strategy from an `opening_book.json` on disk. A missing or malformed book degrades to
-    * bookless aggressive play with a loud stderr note — a bot that plays slightly worse beats one that refuses to
-    * start over a data file.
+  /** Build the aggressive+book strategy from an `opening_book.json` on disk if present, falling back to the
+    * bundled `dicechess-opening-book` artifact resource.
     */
-  def fromBookFile(path: Path): Strategy =
-    val book =
-      if Files.exists(path) then
+  def default(bookPath: Option[Path] = None): Strategy =
+    bookPath.filter(p => Files.exists(p)) match
+      case Some(path) =>
         OpeningBookParser.parse(Files.readString(path)) match
           case Right(entries) =>
-            println(s"[bot] opening book loaded: ${entries.size} entries from $path")
-            entries
+            println(s"[bot] opening book loaded: ${entries.size} entries from file $path")
+            new Strategy(OpeningBookBot.decorate(AggressiveSearch, entries))
           case Left(error) =>
-            System.err.println(s"[bot] opening book at $path is malformed ($error) — playing bookless")
-            Map.empty[String, String]
-      else
-        System.err.println(s"[bot] no opening book at $path — playing bookless")
-        Map.empty[String, String]
-    new Strategy(OpeningBookBot.decorate(AggressiveSearch, book))
+            System.err.println(s"[bot] opening book file at $path is malformed ($error) — falling back to bundled book")
+            loadBundledBook()
+      case None =>
+        loadBundledBook()
+
+  def fromBookFile(path: Path): Strategy = default(Some(path))
+
+  private def loadBundledBook(): Strategy =
+    InstrumentedBook.loadDefault(AggressiveSearch) match
+      case Right(bookBot) =>
+        println(s"[bot] bundled opening book loaded (${bookBot.book.size} entries)")
+        new Strategy(bookBot)
+      case Left(error) =>
+        System.err.println(s"[bot] bundled opening book unavailable ($error) — playing bookless")
+        new Strategy(AggressiveSearch)
