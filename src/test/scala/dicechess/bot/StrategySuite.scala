@@ -1,12 +1,12 @@
 package dicechess.bot
 
 import dicechess.engine.domain.FenParser
-import dicechess.engine.search.{AggressiveSearch, OpeningBook, OpeningBookBot, OpeningBookParser, TurnGenerator}
+import dicechess.engine.search.{AggressiveSearch, OpeningBook, OpeningBookBot, TurnGenerator}
 
 import java.nio.file.Path
 
 /** The brain, hermetically: legal play from a bare DFEN, book-hit precedence, graceful degradation, and the integrity
-  * of the shipped `opening_book.json` copy.
+  * of the bundled opening book resource.
   */
 class StrategySuite extends munit.FunSuite:
 
@@ -31,11 +31,10 @@ class StrategySuite extends munit.FunSuite:
   test("an unusable DFEN is an error value, not an exception"):
     assert(new Strategy(AggressiveSearch).chooseMoves("this is not a dfen").isLeft)
 
-  test("the shipped opening_book.json parses and is non-trivial"):
-    val json = java.nio.file.Files.readString(Path.of("opening_book.json"))
-    val book = OpeningBookParser.parse(json).toOption.get
+  test("the bundled opening book from dicechess-opening-book parses and is non-trivial"):
+    val book = dicechess.openingbook.OpeningBookResource.load().toOption.get
     assert(book.sizeIs > 100, s"expected the real exported book, got ${book.size} entries")
 
-  test("fromBookFile survives a missing book (bookless aggressive still plays)"):
+  test("fromBookFile survives a missing book (bundled/bookless aggressive still plays)"):
     val strategy = Strategy.fromBookFile(Path.of("no-such-file.json"))
     assert(strategy.chooseMoves(initialNbk).toOption.get.nonEmpty)

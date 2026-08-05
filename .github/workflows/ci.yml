@@ -5,8 +5,8 @@ on:
     branches: [main]
   pull_request:
 
-# packages: read — resolves lv.id.jc:dicechess-engine-scala from GitHub Packages with the
-# default token (same pattern as dicechess-house-bots).
+# packages: read — resolves lv.id.jc:dicechess-engine-scala and private dicechess-opening-book
+# from GitHub Packages with the default token (same pattern as dicechess-house-bots).
 permissions:
   contents: read
   packages: read
@@ -34,7 +34,7 @@ jobs:
         run: sbt test
         env:
           GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.READ_PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
 
   native-image:
     name: Native image (linux-x64)
@@ -58,7 +58,7 @@ jobs:
         run: sbt nativeImage
         env:
           GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.READ_PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
 
       - name: Smoke-run the binary
         run: |
